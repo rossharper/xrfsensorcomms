@@ -10,16 +10,18 @@ var serialPort = new SerialPort("/dev/ttyAMA0", {
 var buffer = "";
 var messageLength = 12;
 
-function parseMessage(messageStr) {
-    var messageComponents = messageStr.match(/a([A-Z]{2})([A-Z0-9\.\-]{9})/);
-    console.log(messageComponents);
+function processMessage(message) {
+    if(message[0] != 'a') return;
+    var device = message.substring(1, 2);
+    var payload = message.match(/(TMPA|BATT)(-?[0-9\.]{4,5})/);
+    console.log(payload);
 }
 
 function processBuffer() {
-    if(buffer.length == messageLength) {
-        var messageStr = buffer;
-        buffer = "";
-        var message = parseMessage(messageStr);
+    while(buffer >= messageLength) {
+        var message = buffer.substring(0, messageLength);
+        buffer = buffer.substring(messageLength);
+        processMessage(message);
     }
 }
 
