@@ -11,14 +11,17 @@ var buffer = "";
 var messageLength = 12;
 
 function processMessage(message) {
+    console.log("process: " + message);
     if(message[0] != 'a') return;
     var device = message.substring(1, 2);
+    console.log("device: " + device);
     var payload = message.match(/(TMPA|BATT)(-?[0-9\.]{4,5})/);
     console.log(payload);
 }
 
 function processBuffer() {
-    while(buffer >= messageLength) {
+    console.log("buffer: " + buffer);
+    while(buffer.length >= messageLength) {
         var message = buffer.substring(0, messageLength);
         buffer = buffer.substring(messageLength);
         processMessage(message);
