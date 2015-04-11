@@ -10,6 +10,18 @@ var serialPort = new SerialPort("/dev/ttyAMA0", {
 var buffer = "";
 var messageLength = 12;
 
+
+function processTemperatureMessage(temperature) {
+
+}
+
+function processBatteryMessage(batteryVoltage) {
+    serialPort.write('aTAINTVL001M', function(err, results) {
+        console.log('err ' + err);
+        console.log('results ' + results);
+    });
+}
+
 function processMessage(message) {
     console.log("process: " + message);
     if(message[0] != 'a') return;
@@ -17,6 +29,14 @@ function processMessage(message) {
     console.log("device: " + device);
     var payload = message.match(/(TMPA|BATT)(-?[0-9\.]{4,5})/);
     console.log(payload);
+    if(payload) {
+        if(payload[1] === 'TMPA') {
+            processTemperatureMessage(payload[2]);
+        }
+        else if(payload[2] === 'BATT') {
+            processBatteryMessage(payload[2]);
+        }
+    }
 }
 
 function processBuffer() {
