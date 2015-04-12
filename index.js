@@ -51,14 +51,14 @@ function processMessage(message) {
         if(payload[1] === 'TMPA') {
             processTemperatureMessage(device, payload[2]);
         }
-        else if(payload[2] === 'BATT') {
+        else if(payload[1] === 'BATT') {
             processBatteryMessage(device, payload[2]);
         }
     }
 }
 
 function sendIntervalUpdate() {
-    serialPort.write('aTAINTVL001M', function(err, results) {
+    serialPort.write('aTAINTVL002M', function(err, results) {
         console.log('err ' + err);
         console.log('results ' + results);
         serialPort.drain();
@@ -82,10 +82,7 @@ serialPort.open(function (error) {
         serialPort.on('data', function(data) {
             console.log('data received: ' + data);
 
-            console.log(typeof data);
-
-            var dataStr = "" + data;
-            if(dataStr.indexOf("BATT") >= 0) {
+            if(data.toString().indexOf("BATT") >= 0) {
                 sendIntervalUpdate();
             }
 
