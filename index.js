@@ -41,12 +41,9 @@ function processBatteryMessage(device, batteryVoltage) {
 }
 
 function processMessage(message) {
-    console.log("process: " + message);
     if(message[0] != 'a') return;
     var device = message.substr(1, 2);
-    console.log("device: " + device);
     var payload = message.match(/(TMPA|BATT)(-?[0-9\.]{4,5})/);
-    console.log(payload);
     if(payload) {
         if(payload[1] === 'TMPA') {
             processTemperatureMessage(device, payload[2]);
@@ -59,14 +56,12 @@ function processMessage(message) {
 
 function sendIntervalUpdate() {
     serialPort.write('aTAINTVL002M', function(err, results) {
-        console.log('err ' + err);
-        console.log('results ' + results);
+        console.log('write err ' + err);
         serialPort.drain();
     });
 }
 
 function processBuffer() {
-    console.log("buffer: " + buffer);
     while(buffer.length >= messageLength) {
         var message = buffer.substr(0, messageLength);
         buffer = buffer.substr(messageLength);
