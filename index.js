@@ -17,8 +17,15 @@ var temperatureSchema = mongoose.Schema({
 });
 var Temperature = mongoose.model('temperatures', temperatureSchema);
 
+var batterySchema = mongoose.Schema({
+    device: String,
+    batteryVoltage: Number,
+    date: { type: Date, default: Date.now }
+});
+var Battery = mongoose.model('batteryLevels', batterySchema);
+
 function processTemperatureMessage(device, temperature) {
-    console.log("logging temperature" + temperature);
+    console.log("logging " + device + " temperature: " + temperature);
     var temp = new Temperature();
     temp.device = device;
     temp.temperature = temperature;
@@ -26,10 +33,11 @@ function processTemperatureMessage(device, temperature) {
 }
 
 function processBatteryMessage(device, batteryVoltage) {
-    //serialPort.write('aTAINTVL001M', function(err, results) {
-    //    console.log('err ' + err);
-    //    console.log('results ' + results);
-    //});
+    console.log("logging " + device + " battery health: " + batteryVoltage);
+    var battery = new Battery();
+    battery.device = device;
+    battery.batteryVoltage = batteryVoltage;
+    battery.save();
 }
 
 function processMessage(message) {
@@ -49,6 +57,14 @@ function processMessage(message) {
     }
 }
 
+function sendIntervalUpdate() {
+    serialPort.write('aTAINTVL001M', function(err, results) {
+        console.log('err ' + err);
+        console.log('results ' + results);
+        serialPort.drain();
+    });
+}
+
 function processBuffer() {
     console.log("buffer: " + buffer);
     while(buffer.length >= messageLength) {
@@ -64,6 +80,10 @@ serialPort.open(function (error) {
     } else {
         console.log('open');
         serialPort.on('data', function(data) {
+            if(data.indexOf("BATT") >= 0) {
+                sendIntervalUpdate();
+            }
+
             buffer += data;
             processBuffer();
             console.log('data received: ' + data);
