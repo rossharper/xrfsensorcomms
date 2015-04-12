@@ -82,7 +82,10 @@ serialPort.open(function (error) {
         serialPort.on('data', function(data) {
             console.log('data received: ' + data);
 
-            if(data.indexOf("BATT") >= 0) {
+            console.log(typeof data);
+
+            var dataStr = "" + data;
+            if(dataStr.indexOf("BATT") >= 0) {
                 sendIntervalUpdate();
             }
 
