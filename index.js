@@ -80,13 +80,14 @@ serialPort.open(function (error) {
     } else {
         console.log('open');
         serialPort.on('data', function(data) {
+            console.log('data received: ' + data);
+
             if(data.indexOf("BATT") >= 0) {
                 sendIntervalUpdate();
             }
 
             buffer += data;
             processBuffer();
-            console.log('data received: ' + data);
         });
     }
 });
