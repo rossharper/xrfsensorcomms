@@ -30,8 +30,10 @@ function processTemperatureMessage(device, temperature) {
     temp.device = device;
     temp.temperature = temperature;
     temp.save(function (err) {
-        console.error("Error writing temp to db: " + err); // validator error
-        });
+        if(err) {
+            console.error("Error writing temp to db: " + err);
+        }
+    });
 }
 
 function processBatteryMessage(device, batteryVoltage) {
@@ -40,8 +42,10 @@ function processBatteryMessage(device, batteryVoltage) {
     battery.device = device;
     battery.batteryVoltage = batteryVoltage;
     battery.save(function (err) {
-        console.error("Error writing batt to db: " + err); // validator error
-        });
+        if(err) {
+            console.error("Error writing batt to db: " + err); // validator error
+        }
+    });
 }
 
 function processMessage(message) {
@@ -60,7 +64,9 @@ function processMessage(message) {
 
 function sendIntervalUpdate() {
     serialPort.write('aTAINTVL002M', function(err, results) {
-        console.log('write err ' + err);
+        if(err) {
+            console.log('write err ' + err);
+        }
         serialPort.drain();
     });
 }
