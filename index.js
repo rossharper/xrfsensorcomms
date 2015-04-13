@@ -29,7 +29,9 @@ function processTemperatureMessage(device, temperature) {
     var temp = new Temperature();
     temp.device = device;
     temp.temperature = temperature;
-    temp.save();
+    temp.save(function (err) {
+        console.error("Error writing temp to db: " + err); // validator error
+        });
 }
 
 function processBatteryMessage(device, batteryVoltage) {
@@ -37,7 +39,9 @@ function processBatteryMessage(device, batteryVoltage) {
     var battery = new Battery();
     battery.device = device;
     battery.batteryVoltage = batteryVoltage;
-    battery.save();
+    battery.save(function (err) {
+        console.error("Error writing batt to db: " + err); // validator error
+        });
 }
 
 function processMessage(message) {
