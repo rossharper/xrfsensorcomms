@@ -21,7 +21,7 @@ var tempMessageHandler = new TemperatureMessageHandler(mongoose);
 var battMessageHandler = new BatteryMessageHandler(mongoose);
 
 var messageSender = new MessageSender(serialPort);
-var intervalUpdater = new IntervalUpdater(messageSender, 'TA', 15);
+var intervalUpdater = new IntervalUpdater(messageSender, 'TA', 30);
 
 function processMessage(message) {
     if(message[0] != 'a') return;
