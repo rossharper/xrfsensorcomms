@@ -1,4 +1,6 @@
-function MongooseBatteryDataRepository(mongoose) {
+var mongoose = require('mongoose');
+
+function MongooseBatteryDataRepository() {
     var batterySchema = mongoose.Schema({
         device: String,
         batteryVoltage: Number,
@@ -7,6 +9,8 @@ function MongooseBatteryDataRepository(mongoose) {
     var Battery = mongoose.model('batteryLevels', batterySchema);
 
     this.storeBatteryValue = function (device, voltage) {
+        mongoose.connect('mongodb://localhost/homecontrol');
+
         var battery = new Battery();
         battery.device = device;
         battery.batteryVoltage = voltage;
@@ -15,6 +19,8 @@ function MongooseBatteryDataRepository(mongoose) {
                 console.error("Error writing batt to db: " + err); // validator error
             }
         });
+
+        mongoose.disconnect();
     }
 }
 
