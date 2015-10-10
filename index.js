@@ -8,7 +8,7 @@ var mongoose = require('mongoose'),
 
 mongoose.connect('mongodb://localhost/homecontrol');
 
-var messageInterval = 15;
+var messageInterval = 30;
 
 var serialPort = new SerialPort("/dev/ttyAMA0", {
     baudrate: 9600
@@ -25,29 +25,44 @@ var battMessageHandler = new BatteryMessageHandler(mongoose);
 var messageSender = new MessageSender(serialPort);
 var intervalUpdater = new IntervalUpdater(messageSender);
 
+function XrfParser() {
+    this.getDeviceNameFromMessage = function(message) {
+        return message.substr(1, 2);
+    }
+}
+
+var xrfParser = new XrfParser();
+
+function AwakeMessageHandler(xrfParser) {
+    this.handleMessage = function(message) {
+        if(message.indexOf("AWAKE") >= 0) {
+            onAwake(xrfParser.getDeviceNameFromMessage(message));
+        } 
+    }
+}
+
 function onAwake(device) {
     intervalUpdater.sendIntervalUpdate(device, messageInterval);
 }
 
+var awakeMessageHandler = new AwakeMessageHandler(xrfParser);
+
 function parseMessage(message) {
     if(message[0] != 'a') return;
+
+    awakeMessageHandler.handleMessage(message);
     
     var device = message.substr(1, 2);
-    
-    if(message.indexOf("AWAKE") >= 0) {
-        onAwake(device);
-    }
-    else {
-        var payload = message.match(/(TMPA|BATT)(-?[0-9\.]{4,5})/);
-        if(payload) {
-            if(payload[1] === 'TMPA') {
-                tempMessageHandler.handleMessage(device, payload[2]);
-            }
-            else if(payload[1] === 'BATT') {
-                battMessageHandler.handleMessage(device, payload[2]);
-            }
+
+    var payload = message.match(/(TMPA|BATT)(-?[0-9\.]{4,5})/);
+    if(payload) {
+        if(payload[1] === 'TMPA') {
+            tempMessageHandler.handleMessage(device, payload[2]);
         }
-    } 
+        else if(payload[1] === 'BATT') {
+            battMessageHandler.handleMessage(device, payload[2]);
+        }
+    }
 }
 
 function processBuffer() {
