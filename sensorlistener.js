@@ -2,8 +2,8 @@ function SensorListener(serialPort) {
 
 }
 
-SensorListener.prototype.listen() {
-    
+SensorListener.prototype.listen = funtion() {
+
 }
 
 module.exports = {
