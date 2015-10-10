@@ -9,7 +9,7 @@ function BatteryMessageHandler(mongoose) {
 
 BatteryMessageHandler.prototype.handleMessage = function(device, batteryVoltage) {
     console.log("logging " + device + " battery health: " + batteryVoltage);
-    var battery = new Battery();
+    var battery = new this.Battery();
     battery.device = device;
     battery.batteryVoltage = batteryVoltage;
     battery.save(function (err) {
