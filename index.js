@@ -10,7 +10,8 @@ var SerialPort = require('serialport').SerialPort;
     BatteryMessageParser = require('./batteryMessageParser').BatteryMessageParser,
     TemperatureMessageParser = require('./temperatureMessageParser').TemperatureMessageParser,
     BatteryDataRepository = require('./mongooseBatteryDataRepository').BatteryDataRepository,
-    TemperatureDataRepository = require('./mongooseTemperatureDataRepository').TemperatureDataRepository;
+    TemperatureDataRepository = require('./mongooseTemperatureDataRepository').TemperatureDataRepository,
+    mongoose = require('mongoose');
 
 var messageInterval = 30;
 
