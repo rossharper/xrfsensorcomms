@@ -39,18 +39,28 @@ function processMessage(message) {
     } 
 }
 
+function MessageSender(serialPort) {
+    this.serialPort = serialPort;
+}
+
+MessageSender.prototype.sendMessage(message) {
+        serialPort.write(message, function(err, results) {
+        if(err) {
+            console.log('message sender serial port write err ' + err);
+        }
+        serialPort.drain();
+    });
+}
+
 var intervalMinutes = "" + 2;
 var pad = '000';
 var paddedInterval = pad.substring(0, pad.length - intervalMinutes.length) + intervalMinutes;
 var intervalMessage = 'aTAINTVL' + paddedInterval + 'M';
 
+var messageSender = new MessageSender(serialPort);
+
 function sendIntervalUpdate() {
-    serialPort.write('aTAINTVL015S', function(err, results) {
-        if(err) {
-            console.log('write err ' + err);
-        }
-        serialPort.drain();
-    });
+    messageSender.sendMessage('aTAINTVL015S');
 }
 
 function processBuffer() {
