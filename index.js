@@ -1,13 +1,14 @@
 var SerialPort = require('serialport').SerialPort;
-    SensorListener = require('./sensorlistener').SensorListener,
-    messageParserFactory = require('./messageParserFactory');
+    SensorListener = require('./sensorlistener').SensorListener;
 
+var messageInterval = 30;
 var serialPort = new SerialPort("/dev/ttyAMA0", {
     baudrate: 9600
 });
 
 var sensorListener = new SensorListener(
-    serialPort, 
-    messageParserFactory.createMessageParsers());
+    serialPort,
+    messageInterval 
+    );
 
 sensorListener.listen();

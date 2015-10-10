@@ -1,26 +1,17 @@
-var MessageSender = require('./messageSender').MessageSender,
-    IntervalUpdater = require('./intervalUpdater').IntervalUpdater,
-    AwakeMessageHandler = require('./awakeMessageHandler').AwakeMessageHandler,
-    xrfParser = require('./xrfParser'),
+var xrfParser = require('./xrfParser'),
     AwakeMessageParser = require('./awakeMessageParser').AwakeMessageParser,
     BatteryMessageParser = require('./batteryMessageParser').BatteryMessageParser,
     TemperatureMessageParser = require('./temperatureMessageParser').TemperatureMessageParser,
     dataRepositoryFactory = require('./dataRepositoryFactory');
 
-var messageInterval = 30;
-
-function createMessageParsers() {
+function createMessageParsers(intervalUpdater) {
     var tempDataRepository = dataRepositoryFactory.createTemperatureDataRepository();
     var battDataRepository = dataRepositoryFactory.createBatteryDataRepository();
-
-    var awakeMessageHandler = new AwakeMessageHandler( 
-        new IntervalUpdater(new MessageSender(serialPort)), 
-        messageInterval);
 
     var awakeMessageParser = new AwakeMessageParser(
         xrfParser, 
         function(device) {
-            awakeMessageHandler.handleMessage(device);
+            intervalUpdater.sendIntervalUpdate(device);
         });
 
     var tempMessageParser = new TemperatureMessageParser(
