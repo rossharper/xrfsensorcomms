@@ -2,7 +2,8 @@ var mongoose = require('mongoose'),
     SerialPort = require('serialport').SerialPort;
     SensorListener = require('./sensorlistener').SensorListener,
     TemperatureMessageHandler = require('./mongooseTempMessageHandler').TemperatureMessageHandler,
-    BatteryMessageHandler = require('./mongooseBattMessageHandler').BatteryMessageHandler;
+    BatteryMessageHandler = require('./mongooseBattMessageHandler').BatteryMessageHandler,
+    MessageSender = require('./messageSender').MessageSender;
 
 mongoose.connect('mongodb://localhost/homecontrol');
 
@@ -37,19 +38,6 @@ function processMessage(message) {
             }
         }
     } 
-}
-
-function MessageSender(serialPort) {
-    this.serialPort = serialPort;
-}
-
-MessageSender.prototype.sendMessage = function(message) {
-        serialPort.write(message, function(err, results) {
-        if(err) {
-            console.log('message sender serial port write err ' + err);
-        }
-        serialPort.drain();
-    });
 }
 
 var intervalMinutes = "" + 2;
