@@ -7,7 +7,7 @@ function TemperatureMessageHandler(mongoose) {
     this.Temperature = mongoose.model('temperatures', temperatureSchema);
 }
 
-TemperatureMessageHandler.prototype.handleMessage(device, temperature) {
+TemperatureMessageHandler.prototype.handleMessage = function(device, temperature) {
     console.log("logging " + device + " temperature: " + temperature);
     var temp = new this.Temperature();
     temp.device = device;
