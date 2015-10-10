@@ -18,37 +18,41 @@ var serialPort = new SerialPort("/dev/ttyAMA0", {
     baudrate: 9600
 });
 
-var tempMessageHandler = new TemperatureMessageHandler(new TemperatureDataRepository());
-var battMessageHandler = new BatteryMessageHandler(new BatteryDataRepository());
+mongoose.connect('mongodb://localhost/homecontrol');
 
-var awakeMessageHandler = new AwakeMessageHandler( 
-    new IntervalUpdater(new MessageSender(serialPort)), 
-    messageInterval);
+function createMessageParsers() {
+    var tempMessageHandler = new TemperatureMessageHandler(new TemperatureDataRepository(mongoose));
+    var battMessageHandler = new BatteryMessageHandler(new BatteryDataRepository(mongoose));
 
-var awakeMessageParser = new AwakeMessageParser(
-    xrfParser, 
-    function(device) {
-        awakeMessageHandler.handleMessage(device);
-    });
+    var awakeMessageHandler = new AwakeMessageHandler( 
+        new IntervalUpdater(new MessageSender(serialPort)), 
+        messageInterval);
 
-var tempMessageParser = new TemperatureMessageParser(
-    xrfParser,
-    function(device, temperature) {
-        tempMessageHandler.handleMessage(device, temperature);
-    });
+    var awakeMessageParser = new AwakeMessageParser(
+        xrfParser, 
+        function(device) {
+            awakeMessageHandler.handleMessage(device);
+        });
 
-var battMessageParser = new BatteryMessageParser(
-    xrfParser,
-    function(device, voltage) {
-        battMessageHandler.handleMessage(device, voltage);
-    });
+    var tempMessageParser = new TemperatureMessageParser(
+        xrfParser,
+        function(device, temperature) {
+            tempMessageHandler.handleMessage(device, temperature);
+        });
 
-var messageParsers = [
-    awakeMessageParser,
-    tempMessageParser,
-    battMessageParser
-];
+    var battMessageParser = new BatteryMessageParser(
+        xrfParser,
+        function(device, voltage) {
+            battMessageHandler.handleMessage(device, voltage);
+        });
 
-var sensorListener = new SensorListener(serialPort, messageParsers);
+    return = [
+        awakeMessageParser,
+        tempMessageParser,
+        battMessageParser
+    ];
+}
+
+var sensorListener = new SensorListener(serialPort, createMessageParsers());
 
 sensorListener.listen();

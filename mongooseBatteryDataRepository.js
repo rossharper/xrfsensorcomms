@@ -1,6 +1,4 @@
-var mongoose = require('mongoose');
-
-function MongooseBatteryDataRepository() {
+function MongooseBatteryDataRepository(mongoose) {
     var batterySchema = mongoose.Schema({
         device: String,
         batteryVoltage: Number,
@@ -19,8 +17,6 @@ function MongooseBatteryDataRepository() {
                 console.error("Error writing batt to db: " + err); // validator error
             }
         });
-
-        mongoose.disconnect();
     }
 }
 
