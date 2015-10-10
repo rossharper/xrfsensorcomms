@@ -1,16 +1,7 @@
-function AwakeMessageHandler(xrfParser, intervalUpdater, messageInterval) {
-    this.handleMessage = function(message) {
-        if(message.indexOf("AWAKE") >= 0) {
-            onAwake(
-                intervalUpdater, 
-                xrfParser.getDeviceNameFromMessage(message),
-                messageInterval);
-        } 
-    }
-}
-
-function onAwake(intervalUpdater, device, messageInterval) {
-    intervalUpdater.sendIntervalUpdate(device, messageInterval);
+function AwakeMessageHandler(intervalUpdater, messageInterval) {
+    this.handleMessage = function(device) {
+        intervalUpdater.sendIntervalUpdate(device, messageInterval);
+    } 
 }
 
 module.exports = {

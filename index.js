@@ -26,15 +26,20 @@ var xrfParser = new XrfParser();
 var tempMessageHandler = new TemperatureMessageHandler(mongoose);
 var battMessageHandler = new BatteryMessageHandler(mongoose);
 
-var awakeMessageHandler = new AwakeMessageHandler(
-    new XrfParser(), 
+var awakeMessageHandler = new AwakeMessageHandler( 
     new IntervalUpdater(new MessageSender(serialPort)), 
     messageInterval);
+
+var awakeMessageParser = new AwakeMessageParser(
+    xrfParser, 
+    function(device) {
+        awakeMessageHandler.handleMessage(device);
+    });
 
 function parseMessage(message) {
     if(message[0] != 'a') return;
 
-    awakeMessageHandler.handleMessage(message);
+    awakeMessageParser.parseMessage(message);
     
     var device = message.substr(1, 2);
 
