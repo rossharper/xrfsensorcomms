@@ -1,8 +1,6 @@
-function IntervalUpdater(messageSender, device, intervalSeconds) {
-    var intervalMessage = createIntervalMessage(device, intervalSeconds);
-
-    this.sendIntervalUpdate = function() {
-        messageSender.sendMessage(intervalMessage);
+function IntervalUpdater(messageSender) {
+    this.sendIntervalUpdate = function(device, intervalSeconds) {
+        messageSender.sendMessage(createIntervalMessage(device, intervalSeconds));
     }
 }
 

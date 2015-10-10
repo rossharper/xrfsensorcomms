@@ -8,6 +8,8 @@ var mongoose = require('mongoose'),
 
 mongoose.connect('mongodb://localhost/homecontrol');
 
+var messageInterval = 15;
+
 var serialPort = new SerialPort("/dev/ttyAMA0", {
     baudrate: 9600
 });
@@ -21,10 +23,10 @@ var tempMessageHandler = new TemperatureMessageHandler(mongoose);
 var battMessageHandler = new BatteryMessageHandler(mongoose);
 
 var messageSender = new MessageSender(serialPort);
-var intervalUpdater = new IntervalUpdater(messageSender, 'TA', 30);
+var intervalUpdater = new IntervalUpdater(messageSender);
 
 function onAwake(device) {
-    new IntervalUpdater(messageSender, device, 15).sendIntervalUpdate();
+    intervalUpdater.sendIntervalUpdate(device, messageInterval);
 }
 
 function parseMessage(message) {
