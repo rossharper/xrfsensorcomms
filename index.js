@@ -1,6 +1,6 @@
 var mongoose = require('mongoose'),
     SerialPort = require('serialport').SerialPort;
-    SensorListener = require('sensorlistener').SensorListener,
+    SensorListener = require('./sensorlistener').SensorListener,
     TemperatureMessageHandler = require('mongooseTempMessageHandler').TemperatureMessageHandler;
 
 mongoose.connect('mongodb://localhost/homecontrol');
