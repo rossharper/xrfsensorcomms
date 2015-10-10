@@ -9,7 +9,7 @@ function MongooseBatteryDataRepository(mongoose) {
     this.storeBatteryValue = function (device, voltage) {
         var battery = new Battery();
         battery.device = device;
-        battery.batteryVoltage = batteryVoltage;
+        battery.batteryVoltage = voltage;
         battery.save(function (err) {
             if(err) {
                 console.error("Error writing batt to db: " + err); // validator error
