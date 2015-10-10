@@ -24,7 +24,7 @@ var messageSender = new MessageSender(serialPort);
 var intervalUpdater = new IntervalUpdater(messageSender, 'TA', 30);
 
 function onAwake(device) {
-    new Intervalupdater(messageSender, device, 15).sendIntervalUpdate();
+    new IntervalUpdater(messageSender, device, 15).sendIntervalUpdate();
 }
 
 function parseMessage(message) {
