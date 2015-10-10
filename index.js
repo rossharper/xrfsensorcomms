@@ -20,22 +20,28 @@ var battMessageHandler = new BatteryMessageHandler(mongoose);
 
 function processMessage(message) {
     if(message[0] != 'a') return;
+    
     var device = message.substr(1, 2);
-    var payload = message.match(/(TMPA|BATT)(-?[0-9\.]{4,5})/);
-    if(payload) {
-        if(payload[1] === 'TMPA') {
-            tempMessageHandler.handleMessage(device, payload[2]);
-        }
-        else if(payload[1] === 'BATT') {
-            sendIntervalUpdate();
-            battMessageHandler.handleMessage(device, payload[2]);
-        }
+    
+    if(message.indexOf("AWAKE") >= 0) {
+        sendIntervalUpdate();
     }
+    else {
+        var payload = message.match(/(TMPA|BATT)(-?[0-9\.]{4,5})/);
+        if(payload) {
+            if(payload[1] === 'TMPA') {
+                tempMessageHandler.handleMessage(device, payload[2]);
+            }
+            else if(payload[1] === 'BATT') {
+                battMessageHandler.handleMessage(device, payload[2]);
+            }
+        }
+    } 
 }
 
-var intervalMinutes = 2;
+var intervalMinutes = "" + 2;
 var pad = '000';
-var paddedInterval = pad.substring(0, pad.length - str.length) + str;
+var paddedInterval = pad.substring(0, pad.length - intervalMinutes.length) + intervalMinutes;
 var intervalMessage = 'aTAINTVL' + paddedInterval + 'M';
 
 function sendIntervalUpdate() {
