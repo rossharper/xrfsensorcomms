@@ -1,7 +1,8 @@
 var mongoose = require('mongoose'),
     SerialPort = require('serialport').SerialPort;
     SensorListener = require('./sensorlistener').SensorListener,
-    TemperatureMessageHandler = require('./mongooseTempMessageHandler').TemperatureMessageHandler;
+    TemperatureMessageHandler = require('./mongooseTempMessageHandler').TemperatureMessageHandler,
+    BatteryMessageHandler = require('./mongooseBattMessageHandler').BatteryMessageHandler;
 
 mongoose.connect('mongodb://localhost/homecontrol');
 
@@ -13,49 +14,19 @@ var sensorlistener = new SensorListener(serialPort);
 
 var buffer = "";
 var messageLength = 12;
-/*
-var temperatureSchema = mongoose.Schema({
-    device: String,
-    temperature: Number,
-    date: { type: Date, default: Date.now }
-});
-var Temperature = mongoose.model('temperatures', temperatureSchema);
-*/
-var batterySchema = mongoose.Schema({
-    device: String,
-    batteryVoltage: Number,
-    date: { type: Date, default: Date.now }
-});
-var Battery = mongoose.model('batteryLevels', batterySchema);
-/*
-function processTemperatureMessage(device, temperature) {
-    console.log("logging " + device + " temperature: " + temperature);
-    var temp = new Temperature();
-    temp.device = device;
-    temp.temperature = temperature;
-    temp.save(function (err) {
-        if(err) {
-            console.error("Error writing temp to db: " + err);
-        }
-    });
-}
-*/
+
 var tempMessageHandler = new TemperatureMessageHandler(mongoose);
+
 function processTemperatureMessage(device, temperature) {
     tempMessageHandler.handleMessage(device, temperature);
 }
 
+var battMessageHandler = new BatteryMessageHandler(mongoose);
+
 function processBatteryMessage(device, batteryVoltage) {
-    console.log("logging " + device + " battery health: " + batteryVoltage);
-    var battery = new Battery();
-    battery.device = device;
-    battery.batteryVoltage = batteryVoltage;
-    battery.save(function (err) {
-        if(err) {
-            console.error("Error writing batt to db: " + err); // validator error
-        }
-    });
+    battMessageHandler.handleMessage(device, batteryVoltage);
 }
+
 
 function processMessage(message) {
     if(message[0] != 'a') return;
