@@ -3,7 +3,8 @@ var mongoose = require('mongoose'),
     SensorListener = require('./sensorlistener').SensorListener,
     TemperatureMessageHandler = require('./mongooseTempMessageHandler').TemperatureMessageHandler,
     BatteryMessageHandler = require('./mongooseBattMessageHandler').BatteryMessageHandler,
-    MessageSender = require('./messageSender').MessageSender;
+    MessageSender = require('./messageSender').MessageSender,
+    IntervalUpdater = require('./intervalUpdater').IntervalUpdater;
 
 mongoose.connect('mongodb://localhost/homecontrol');
 
@@ -19,13 +20,16 @@ var messageLength = 12;
 var tempMessageHandler = new TemperatureMessageHandler(mongoose);
 var battMessageHandler = new BatteryMessageHandler(mongoose);
 
+var messageSender = new MessageSender(serialPort);
+var intervalUpdater = new IntervalUpdater(messageSender, 'TA', 15);
+
 function processMessage(message) {
     if(message[0] != 'a') return;
     
     var device = message.substr(1, 2);
     
     if(message.indexOf("AWAKE") >= 0) {
-        sendIntervalUpdate();
+        intervalUpdater.sendIntervalUpdate();
     }
     else {
         var payload = message.match(/(TMPA|BATT)(-?[0-9\.]{4,5})/);
@@ -38,17 +42,6 @@ function processMessage(message) {
             }
         }
     } 
-}
-
-var intervalMinutes = "" + 2;
-var pad = '000';
-var paddedInterval = pad.substring(0, pad.length - intervalMinutes.length) + intervalMinutes;
-var intervalMessage = 'aTAINTVL' + paddedInterval + 'M';
-
-var messageSender = new MessageSender(serialPort);
-
-function sendIntervalUpdate() {
-    messageSender.sendMessage('aTAINTVL015S');
 }
 
 function processBuffer() {
