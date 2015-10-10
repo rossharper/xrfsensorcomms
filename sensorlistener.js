@@ -7,5 +7,5 @@ SensorListener.prototype.listen = function() {
 }
 
 module.exports = {
-    SensorListener = SensorListener;
+    SensorListener : SensorListener;
 }
