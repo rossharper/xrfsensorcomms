@@ -4,7 +4,9 @@ var mongoose = require('mongoose'),
     TemperatureMessageHandler = require('./mongooseTempMessageHandler').TemperatureMessageHandler,
     BatteryMessageHandler = require('./mongooseBattMessageHandler').BatteryMessageHandler,
     MessageSender = require('./messageSender').MessageSender,
-    IntervalUpdater = require('./intervalUpdater').IntervalUpdater;
+    IntervalUpdater = require('./intervalUpdater').IntervalUpdater,
+    AwakeMessageHandler = require('./awakeMessageHandler').AwakeMessageHandler,
+    XrfParser = require('./xrfParser').XrfParser;
 
 mongoose.connect('mongodb://localhost/homecontrol');
 
@@ -19,33 +21,15 @@ var sensorlistener = new SensorListener(serialPort);
 var buffer = "";
 var messageLength = 12;
 
+var xrfParser = new XrfParser();
+
 var tempMessageHandler = new TemperatureMessageHandler(mongoose);
 var battMessageHandler = new BatteryMessageHandler(mongoose);
 
-var messageSender = new MessageSender(serialPort);
-var intervalUpdater = new IntervalUpdater(messageSender);
-
-function XrfParser() {
-    this.getDeviceNameFromMessage = function(message) {
-        return message.substr(1, 2);
-    }
-}
-
-var xrfParser = new XrfParser();
-
-function AwakeMessageHandler(xrfParser) {
-    this.handleMessage = function(message) {
-        if(message.indexOf("AWAKE") >= 0) {
-            onAwake(xrfParser.getDeviceNameFromMessage(message));
-        } 
-    }
-}
-
-function onAwake(device) {
-    intervalUpdater.sendIntervalUpdate(device, messageInterval);
-}
-
-var awakeMessageHandler = new AwakeMessageHandler(xrfParser);
+var awakeMessageHandler = new AwakeMessageHandler(
+    new XrfParser(), 
+    new IntervalUpdater(new MessageSender(serialPort)), 
+    messageInterval);
 
 function parseMessage(message) {
     if(message[0] != 'a') return;
