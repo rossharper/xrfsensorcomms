@@ -3,11 +3,11 @@ function MessageSender(serialPort) {
 }
 
 MessageSender.prototype.sendMessage = function(message) {
-        serialPort.write(message, function(err, results) {
+        this.serialPort.write(message, function(err, results) {
         if(err) {
             console.log('message sender serial port write err ' + err);
         }
-        serialPort.drain();
+        this.serialPort.drain();
     });
 }
 
