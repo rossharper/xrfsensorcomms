@@ -9,7 +9,9 @@ var mongoose = require('mongoose'),
     xrfParser = require('./xrfParser'),
     AwakeMessageParser = require('./awakeMessageParser').AwakeMessageParser,
     BatteryMessageParser = require('./batteryMessageParser').BatteryMessageParser,
-    TemperatureMessageParser = require('./temperatureMessageParser').TemperatureMessageParser;
+    TemperatureMessageParser = require('./temperatureMessageParser').TemperatureMessageParser,
+    BatteryDataRepository = require('./mongooseBatteryDataRepository').BatteryDataRepository,
+    TemperatureDataRepository = require('./mongooseTemperatureDataRepository').TemperatureDataRepository;
 
 mongoose.connect('mongodb://localhost/homecontrol');
 
@@ -19,8 +21,8 @@ var serialPort = new SerialPort("/dev/ttyAMA0", {
     baudrate: 9600
 });
 
-var tempMessageHandler = new TemperatureMessageHandler(mongoose);
-var battMessageHandler = new BatteryMessageHandler(mongoose);
+var tempMessageHandler = new TemperatureMessageHandler(new TemperatureDataRepository(mongoose));
+var battMessageHandler = new BatteryMessageHandler(new BatteryDataRepository(mongoose));
 
 var awakeMessageHandler = new AwakeMessageHandler( 
     new IntervalUpdater(new MessageSender(serialPort)), 
@@ -50,6 +52,6 @@ var messageParsers = [
     battMessageParser
 ];
 
-var sensorlistener = new SensorListener(serialPort, messageParsers);
+var sensorListener = new SensorListener(serialPort, messageParsers);
 
 sensorListener.listen();
