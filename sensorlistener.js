@@ -7,9 +7,7 @@ var messageLength = 12;
 function SensorListener(serialPort, messageInterval) {
     var buffer = "";
     var messageParsers = messageParserFactory.createMessageParsers(
-        new IntervalUpdater(
-            new MessageSender(serialPort),
-            messageInterval));
+        new IntervalUpdater(new MessageSender(serialPort), messageInterval));
 
     var parseMessage = function(message) {
         if(message[0] != 'a') return;
