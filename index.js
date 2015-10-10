@@ -16,17 +16,7 @@ var buffer = "";
 var messageLength = 12;
 
 var tempMessageHandler = new TemperatureMessageHandler(mongoose);
-
-function processTemperatureMessage(device, temperature) {
-    tempMessageHandler.handleMessage(device, temperature);
-}
-
 var battMessageHandler = new BatteryMessageHandler(mongoose);
-
-function processBatteryMessage(device, batteryVoltage) {
-    battMessageHandler.handleMessage(device, batteryVoltage);
-}
-
 
 function processMessage(message) {
     if(message[0] != 'a') return;
@@ -34,16 +24,22 @@ function processMessage(message) {
     var payload = message.match(/(TMPA|BATT)(-?[0-9\.]{4,5})/);
     if(payload) {
         if(payload[1] === 'TMPA') {
-            processTemperatureMessage(device, payload[2]);
+            tempMessageHandler.handleMessage(device, payload[2]);
         }
         else if(payload[1] === 'BATT') {
-            processBatteryMessage(device, payload[2]);
+            sendIntervalUpdate();
+            battMessageHandler.handleMessage(device, payload[2]);
         }
     }
 }
 
+var intervalMinutes = 2;
+var pad = '000';
+var paddedInterval = pad.substring(0, pad.length - str.length) + str;
+var intervalMessage = 'aTAINTVL' + paddedInterval + 'M';
+
 function sendIntervalUpdate() {
-    serialPort.write('aTAINTVL002M', function(err, results) {
+    serialPort.write('aTAINTVL015S', function(err, results) {
         if(err) {
             console.log('write err ' + err);
         }
@@ -67,9 +63,9 @@ serialPort.open(function (error) {
         serialPort.on('data', function(data) {
             console.log('data received: ' + data);
 
-            if(data.toString().indexOf("BATT") >= 0) {
-                sendIntervalUpdate();
-            }
+            // if(data.toString().indexOf("BATT") >= 0) {
+            //     sendIntervalUpdate();
+            // }
 
             buffer += data;
             processBuffer();
