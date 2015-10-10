@@ -20,5 +20,5 @@ TemperatureMessageHandler.prototype.handleMessage(device, temperature) {
 }
 
 module.exports = {
-    TemperatureMessageHandler : TemperatureMessageHandler;
+    TemperatureMessageHandler : TemperatureMessageHandler
 }
