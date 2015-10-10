@@ -35,7 +35,7 @@ function parseMessage(message) {
     var device = message.substr(1, 2);
     
     if(message.indexOf("AWAKE") >= 0) {
-        onAwake();
+        onAwake(device);
     }
     else {
         var payload = message.match(/(TMPA|BATT)(-?[0-9\.]{4,5})/);
