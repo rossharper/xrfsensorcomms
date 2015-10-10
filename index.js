@@ -23,8 +23,7 @@ mongoose.connect('mongodb://localhost/homecontrol');
 
 function createMessageParsers() {
     var tempDataRepository = new TemperatureDataRepository(mongoose);
-    var tempMessageHandler = new TemperatureMessageHandler(tempDataRepository);
-    var battMessageHandler = new BatteryMessageHandler(new BatteryDataRepository(mongoose));
+    var battDataRepository = new BatteryDataRepository(mongoose);
 
     var awakeMessageHandler = new AwakeMessageHandler( 
         new IntervalUpdater(new MessageSender(serialPort)), 
@@ -39,13 +38,15 @@ function createMessageParsers() {
     var tempMessageParser = new TemperatureMessageParser(
         xrfParser,
         function(device, temperature) {
-            tempMessageHandler.handleMessage(device, temperature);
+            console.log("logging " + device + " temperature: " + temperature);
+            tempDataRepository.storeTemperatureValue(device, temperature);
         });
 
     var battMessageParser = new BatteryMessageParser(
         xrfParser,
         function(device, voltage) {
-            battMessageHandler.handleMessage(device, voltage);
+            console.log("logging " + device + " battery health: " + batteryVoltage);
+            battDataRepository.storeBatteryValue(device, batteryVoltage);
         });
 
     return [
