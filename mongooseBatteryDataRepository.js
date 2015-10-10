@@ -7,8 +7,6 @@ function MongooseBatteryDataRepository(mongoose) {
     var Battery = mongoose.model('batteryLevels', batterySchema);
 
     this.storeBatteryValue = function (device, voltage) {
-        mongoose.connect('mongodb://localhost/homecontrol');
-
         var battery = new Battery();
         battery.device = device;
         battery.batteryVoltage = voltage;

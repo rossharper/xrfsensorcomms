@@ -22,7 +22,8 @@ var serialPort = new SerialPort("/dev/ttyAMA0", {
 mongoose.connect('mongodb://localhost/homecontrol');
 
 function createMessageParsers() {
-    var tempMessageHandler = new TemperatureMessageHandler(new TemperatureDataRepository(mongoose));
+    var tempDataRepository = new TemperatureDataRepository(mongoose);
+    var tempMessageHandler = new TemperatureMessageHandler(tempDataRepository);
     var battMessageHandler = new BatteryMessageHandler(new BatteryDataRepository(mongoose));
 
     var awakeMessageHandler = new AwakeMessageHandler( 
