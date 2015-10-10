@@ -46,7 +46,7 @@ function createMessageParsers() {
             battMessageHandler.handleMessage(device, voltage);
         });
 
-    return = [
+    return [
         awakeMessageParser,
         tempMessageParser,
         battMessageParser
