@@ -23,13 +23,17 @@ var battMessageHandler = new BatteryMessageHandler(mongoose);
 var messageSender = new MessageSender(serialPort);
 var intervalUpdater = new IntervalUpdater(messageSender, 'TA', 30);
 
-function processMessage(message) {
+function onAwake(device) {
+    new Intervalupdater(messageSender, device, 15).sendIntervalUpdate();
+}
+
+function parseMessage(message) {
     if(message[0] != 'a') return;
     
     var device = message.substr(1, 2);
     
     if(message.indexOf("AWAKE") >= 0) {
-        intervalUpdater.sendIntervalUpdate();
+        onAwake();
     }
     else {
         var payload = message.match(/(TMPA|BATT)(-?[0-9\.]{4,5})/);
@@ -48,7 +52,7 @@ function processBuffer() {
     while(buffer.length >= messageLength) {
         var message = buffer.substr(0, messageLength);
         buffer = buffer.substr(messageLength);
-        processMessage(message);
+        parseMessage(message);
     }
 }
 
@@ -59,10 +63,6 @@ serialPort.open(function (error) {
         console.log('open');
         serialPort.on('data', function(data) {
             console.log('data received: ' + data);
-
-            // if(data.toString().indexOf("BATT") >= 0) {
-            //     sendIntervalUpdate();
-            // }
 
             buffer += data;
             processBuffer();
