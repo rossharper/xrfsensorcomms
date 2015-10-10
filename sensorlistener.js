@@ -2,7 +2,7 @@ function SensorListener(serialPort) {
 
 }
 
-SensorListener.prototype.listen = funtion() {
+SensorListener.prototype.listen = function() {
 
 }
 
