@@ -6,7 +6,8 @@ var mongoose = require('mongoose'),
     MessageSender = require('./messageSender').MessageSender,
     IntervalUpdater = require('./intervalUpdater').IntervalUpdater,
     AwakeMessageHandler = require('./awakeMessageHandler').AwakeMessageHandler,
-    XrfParser = require('./xrfParser').XrfParser;
+    xrfParser = require('./xrfParser'),
+    AwakeMessageParser = require('./awakeMessageParser').AwakeMessageParser;
 
 mongoose.connect('mongodb://localhost/homecontrol');
 
@@ -21,8 +22,6 @@ var sensorlistener = new SensorListener(serialPort);
 var buffer = "";
 var messageLength = 12;
 
-var xrfParser = new XrfParser();
-
 var tempMessageHandler = new TemperatureMessageHandler(mongoose);
 var battMessageHandler = new BatteryMessageHandler(mongoose);
 
@@ -36,22 +35,57 @@ var awakeMessageParser = new AwakeMessageParser(
         awakeMessageHandler.handleMessage(device);
     });
 
+function TemperatureMessageParser(xrfParser, onTempCallback) {
+    this.parseMessage = function(message) {
+        var payload = message.match(/TMPA(-?[0-9\.]{4,5})/);
+        if(payload) {
+            onTempCallback(
+                xrfParser.getDeviceNameFromMessage(message),
+                payload[1]);
+            return true;
+        }
+        return false;
+    }
+}
+
+var tempMessageParser = new TemperatureMessageParser(
+    xrfParser,
+    function(device, temperature) {
+        tempMessageHandler.handleMessage(device, temperature);
+    });
+
+function BatteryMessageParser(xrfParser, onBattCallback) {
+    this.parseMessage = function(message) {
+        var payload = message.match(/BATT(-?[0-9\.]{4,5})/);
+        if(payload) {
+            onBattCallback(
+                xrfParser.getDeviceNameFromMessage(message),
+                payload[1]);
+            return true;
+        }
+        return false;
+    }
+}
+
+var battMessageParser = new BatteryMessageParser(
+    xrfParser,
+    function(device, voltage) {
+        battMessageHandler.handleMessage(device, voltage);
+    });
+
+var messageParsers = [
+    awakeMessageParser,
+    tempMessageParser,
+    battMessageParser
+];
+
 function parseMessage(message) {
     if(message[0] != 'a') return;
 
-    awakeMessageParser.parseMessage(message);
-    
-    var device = message.substr(1, 2);
-
-    var payload = message.match(/(TMPA|BATT)(-?[0-9\.]{4,5})/);
-    if(payload) {
-        if(payload[1] === 'TMPA') {
-            tempMessageHandler.handleMessage(device, payload[2]);
-        }
-        else if(payload[1] === 'BATT') {
-            battMessageHandler.handleMessage(device, payload[2]);
-        }
-    }
+    for (var i = 0; i < messageParsers.length; i++) {
+        parsed = messageParsers[i].parseMessage(message);
+        if(parsed) break;
+    };
 }
 
 function processBuffer() {
