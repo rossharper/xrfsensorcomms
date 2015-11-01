@@ -1,6 +1,6 @@
 function BatteryMessageParser(xrfParser, onBattCallback) {
     this.parseMessage = function(message) {
-        var payload = message.match(/BATT(-?[0-9\.]{4,5})/);
+        var payload = message.match(/a[A-Z][A-Z]BATT(-?[0-9\.]{4,5})/);
         if(payload) {
             onBattCallback(
                 xrfParser.getDeviceNameFromMessage(message),
