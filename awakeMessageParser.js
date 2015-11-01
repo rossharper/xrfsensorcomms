@@ -3,7 +3,7 @@ function AwakeMessageParser(xrfParser, onAwakeCallback) {
         if(message.indexOf("AWAKE") >= 0) {
             onAwakeCallback(xrfParser.getDeviceNameFromMessage(message));
             return true;
-        } 
+        }
         return false;
     }
 }

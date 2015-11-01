@@ -8,7 +8,7 @@ var serialPort = new SerialPort("/dev/ttyAMA0", {
 
 var sensorListener = new SensorListener(
     serialPort,
-    messageInterval 
+    messageInterval
     );
 
 sensorListener.listen();

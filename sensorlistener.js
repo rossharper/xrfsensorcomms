@@ -21,7 +21,9 @@ function SensorListener(serialPort, messageInterval) {
     var processBuffer = function() {
         while(buffer.length >= messageLength) {
             var message = buffer.substr(0, messageLength);
+            console.log('PROCESS message: ' + message);
             buffer = buffer.substr(messageLength);
+            console.log('POST-PROCESS buffer: ' + buffer);
             parseMessage(message);
         }
     }
@@ -36,7 +38,8 @@ function SensorListener(serialPort, messageInterval) {
                     console.log('data received: ' + data);
 
                     buffer += data;
-                    
+                    console.log('buffer after data receive: ' + buffer);
+
                     processBuffer();
                 });
             }

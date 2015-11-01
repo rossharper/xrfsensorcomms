@@ -9,7 +9,7 @@ function createMessageParsers(intervalUpdater) {
     var battDataRepository = dataRepositoryFactory.createBatteryDataRepository();
 
     var awakeMessageParser = new AwakeMessageParser(
-        xrfParser, 
+        xrfParser,
         function(device) {
             intervalUpdater.sendIntervalUpdate(device);
         });

@@ -4,4 +4,4 @@ function getDeviceNameFromMessage(message) {
 
 module.exports = {
     getDeviceNameFromMessage : getDeviceNameFromMessage
-}   
+}
