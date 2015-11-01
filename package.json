@@ -1,11 +1,11 @@
 {
-  "name": "tempmon",
+  "name": "xrfsensorcomms",
   "version": "1.0.0",
-  "description": "Temperature monitor that listens to temperature and battery readings from remote XRF thermistor",
+  "description": "Communicates with XRF sensor modules",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/rossharper/tempmon"
+    "url": "https://github.com/rossharper/xrfsensorcomms"
   },
   "author": "Ross Harper <ross@rossharper.net>",
   "dependencies": {

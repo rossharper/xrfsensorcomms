@@ -1,2 +1,2 @@
-rm ~/.forever/tempmon.log
-forever start -l tempmon.log index.js
+rm ~/.forever/xrfsensorcomms.log
+forever start -l xrfsensorcomms.log index.js
