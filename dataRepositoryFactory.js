@@ -1,15 +1,15 @@
-var BatteryDataRepository = require('./mongooseBatteryDataRepository').BatteryDataRepository,
-    TemperatureDataRepository = require('./mongooseTemperatureDataRepository').TemperatureDataRepository,
-    mongoose = require('mongoose');
+var BatteryDataRepository = require('./FileSystemBatteryDataRepository').BatteryDataRepository,
+    TemperatureDataRepository = require('./FileSystemTemperatureDataRepository').TemperatureDataRepository;
+//var    mongoose = require('mongoose');
 
-var mongodbLocation = 'mongodb://localhost/homecontrol';
-mongoose.connect(mongodbLocation);
+//var mongodbLocation = 'mongodb://localhost/homecontrol';
+//mongoose.connect(mongodbLocation);
 
 module.exports = {
-    createBatteryDataRepository : function() {
-        return new BatteryDataRepository(mongoose);
+    createBatteryDataRepository : function(sensorDataPath) {
+        return new BatteryDataRepository(sensorDataPath);
     },
-    createTemperatureDataRepository : function() {
-        return new TemperatureDataRepository(mongoose);
+    createTemperatureDataRepository : function(sensorDataPath) {
+        return new TemperatureDataRepository(sensorDataPath);
     }
 }

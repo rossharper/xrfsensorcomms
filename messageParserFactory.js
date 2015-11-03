@@ -5,9 +5,9 @@ var xrfParser = require('./xrfParser'),
     TemperatureMessageParser = require('./temperatureMessageParser').TemperatureMessageParser,
     dataRepositoryFactory = require('./dataRepositoryFactory');
 
-function createMessageParsers(intervalUpdater) {
-    var tempDataRepository = dataRepositoryFactory.createTemperatureDataRepository();
-    var battDataRepository = dataRepositoryFactory.createBatteryDataRepository();
+function createMessageParsers(intervalUpdater, sensorDataPath) {
+    var tempDataRepository = dataRepositoryFactory.createTemperatureDataRepository(sensorDataPath);
+    var battDataRepository = dataRepositoryFactory.createBatteryDataRepository(sensorDataPath);
 
     var awakeMessageParser = new AwakeMessageParser(
         xrfParser,

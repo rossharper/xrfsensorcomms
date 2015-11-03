@@ -4,10 +4,11 @@ var MessageSender = require('./messageSender').MessageSender,
 
 var messageLength = 12;
 
-function SensorListener(serialPort, messageInterval) {
+function SensorListener(serialPort, messageInterval, sensorDataPath) {
     var buffer = "";
     var messageParsers = messageParserFactory.createMessageParsers(
-        new IntervalUpdater(new MessageSender(serialPort), messageInterval));
+        new IntervalUpdater(new MessageSender(serialPort), messageInterval),
+        sensorDataPath);
 
     var parseMessage = function(message) {
         if(message[0] != 'a') return;
