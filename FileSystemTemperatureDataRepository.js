@@ -3,7 +3,7 @@ var fs = require('fs');
 function FileSystemTemperatureDataRepository(sensorDataPath) {
     this.storeTemperatureValue = function(device, temperature) {
         var devicePath = sensorDataPath + '/' + device;
-        ensureExists(devicePath, function(err) {
+        ensureDeviceDirectoryExists(devicePath, function(err) {
             if (err) {
                 console.log("Failed to create device directory: " + devicePath + " with err: " + err);
             }
