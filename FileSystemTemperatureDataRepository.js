@@ -25,9 +25,9 @@ function FileSystemTemperatureDataRepository(sensorDataPath) {
     function ensureDeviceDirectoryExists(path, callback) {
         fs.mkdir(path, function(err) {
             if (err) {
-                if (err.code == 'EEXIST') cb(null); // ignore the error if the folder already exists
-                else cb(err); // something else went wrong
-            } else cb(null); // successfully created folder
+                if (err.code == 'EEXIST') callback(null); // ignore the error if the folder already exists
+                else callback(err); // something else went wrong
+            } else callback(null); // successfully created folder
         });
     }
 }
