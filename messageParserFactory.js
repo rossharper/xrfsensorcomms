@@ -33,6 +33,7 @@ function createMessageParsers(intervalUpdater) {
         xrfParser,
         function(device) {
             console.log("logging BATTERY LOW for device " + device);
+            // TODO: store battery low signal in a repository
         }
     );
 
