@@ -7,5 +7,5 @@ function FileSystemBatteryLowDataRepository(sensorDataPath) {
 }
 
 module.exports = {
-    BatteryDataRepository : FileSystemBatteryDataRepository
+    BatteryLowDataRepository : FileSystemBatteryLowDataRepository
 }
