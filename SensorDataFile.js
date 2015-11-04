@@ -1,13 +1,13 @@
 var fs = require('fs');
 
-function writeSensorDataFile(sensorDataPath, device, value) {
+function writeSensorDataFile(sensorDataPath, dataFile, device, value) {
     var devicePath = sensorDataPath + '/' + device;
     ensureDeviceDirectoryExists(devicePath, function(err) {
         if (err) {
             console.log("Failed to create device directory: " + devicePath + " with err: " + err);
         }
         else {
-            writeDeviceDataValue(devicePath, value)
+            writeDeviceDataValue(devicePath + "/" + dataFile, value)
         }
     });
 }

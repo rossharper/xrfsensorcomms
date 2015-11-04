@@ -3,7 +3,7 @@ var SensorDataFile = require('./SensorDataFile');
 function FileSystemTemperatureDataRepository(sensorDataPath) {
 
     this.storeTemperatureValue = function(device, temperature) {
-        SensorDataFile.writeSensorDataFile(sensorDataPath, device, temperature);
+        SensorDataFile.writeSensorDataFile(sensorDataPath, "value", device, temperature);
     }
 
     // this.storeTemperatureValue = function(device, temperature) {
