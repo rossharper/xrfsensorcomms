@@ -8,6 +8,7 @@ var xrfParser = require('./xrfParser'),
 function createMessageParsers(intervalUpdater, sensorDataPath) {
     var tempDataRepository = dataRepositoryFactory.createTemperatureDataRepository(sensorDataPath);
     var battDataRepository = dataRepositoryFactory.createBatteryDataRepository(sensorDataPath);
+    var battLowDataRepository = dataRepositoryFactory.createBatteryLowDataRepository(sensorDataPath);
 
     var awakeMessageParser = new AwakeMessageParser(
         xrfParser,
@@ -33,7 +34,7 @@ function createMessageParsers(intervalUpdater, sensorDataPath) {
         xrfParser,
         function(device) {
             console.log("logging BATTERY LOW for device " + device);
-            // TODO: store battery low signal in a repository
+            battLowDataRepository.storeBatteryLowFlag(device);
         }
     );
 

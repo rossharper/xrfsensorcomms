@@ -1,4 +1,5 @@
 var BatteryDataRepository = require('./FileSystemBatteryDataRepository').BatteryDataRepository,
+    BatteryLowDataRepository = require('./FileSystemBatteryLowDataRepository').BatteryLowDataRepository,
     TemperatureDataRepository = require('./FileSystemTemperatureDataRepository').TemperatureDataRepository;
 //var    mongoose = require('mongoose');
 
@@ -11,5 +12,8 @@ module.exports = {
     },
     createTemperatureDataRepository : function(sensorDataPath) {
         return new TemperatureDataRepository(sensorDataPath);
+    },
+    createBatteryLowDataRepository : function(sensorDataPath) {
+        return new BatteryLowDataRepository(sensorDataPath);
     }
 }
