@@ -1,4 +1,4 @@
-var fs = require('./SensorDataFile');
+var SensorDataFile = require('./SensorDataFile');
 
 function FileSystemTemperatureDataRepository(sensorDataPath) {
 
