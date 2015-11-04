@@ -1,6 +1,8 @@
-function FileSystemBatteryDataRepository() {
+var fs = require('./SensorDataFile');
+
+function FileSystemBatteryDataRepository(sensorDataPath) {
     this.storeBatteryValue = function (device, voltage) {
-        // TODO: store battery value to file system
+        SensorDataFile.writeSensorDataFile(sensorDataPath, device, voltage);
     }
 }
 
