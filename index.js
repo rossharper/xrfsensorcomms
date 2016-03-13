@@ -12,7 +12,7 @@ function usage() {
     console.log("Usage: ");
     console.log("  node index.js [-sensorpath <SENSOR_DATA_PATH>]");
     console.log("");
-    console.log("-sensorpath    path at which temperature sensor readings can be read");
+    console.log("-sensorpath    path at which temperature sensor data will be written");
     process.exit();
 }
 
