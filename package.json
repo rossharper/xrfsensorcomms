@@ -3,13 +3,18 @@
   "version": "1.0.0",
   "description": "Communicates with XRF sensor modules",
   "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/.bin/mocha --reporter spec"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/rossharper/xrfsensorcomms"
   },
   "author": "Ross Harper <ross@rossharper.net>",
   "dependencies": {
-    "serialport": "^1.6.3",
-    "mongoose": "~4.0.1"
+    "chai": "^3.5.0",
+    "mocha": "^2.5.3",
+    "mongoose": "~4.0.1",
+    "serialport": "^1.6.3"
   }
 }
