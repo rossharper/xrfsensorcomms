@@ -13,6 +13,7 @@
   "author": "Ross Harper <ross@rossharper.net>",
   "dependencies": {
     "chai": "^3.5.0",
+    "chai-spies": "^0.7.1",
     "mocha": "^2.5.3",
     "mongoose": "~4.0.1",
     "serialport": "^1.6.3"
