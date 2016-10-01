@@ -1,10 +1,6 @@
 var BatteryDataRepository = require('./FileSystemBatteryDataRepository').BatteryDataRepository,
     BatteryLowDataRepository = require('./FileSystemBatteryLowDataRepository').BatteryLowDataRepository,
     TemperatureDataRepository = require('./FileSystemTemperatureDataRepository').TemperatureDataRepository;
-//var    mongoose = require('mongoose');
-
-//var mongodbLocation = 'mongodb://localhost/homecontrol';
-//mongoose.connect(mongodbLocation);
 
 module.exports = {
     createBatteryDataRepository : function(sensorDataPath) {
