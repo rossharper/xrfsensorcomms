@@ -12,7 +12,7 @@
   },
   "author": "Ross Harper <ross@rossharper.net>",
   "dependencies": {
-    "serialport": "^2.1.2"
+    "serialport": "^3.1.2"
   },
   "devDependencies": {
     "chai": "^3.5.0",
