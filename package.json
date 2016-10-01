@@ -12,9 +12,11 @@
   },
   "author": "Ross Harper <ross@rossharper.net>",
   "dependencies": {
+    "serialport": "^2.1.2"
+  },
+  "devDependencies": {
     "chai": "^3.5.0",
     "chai-spies": "^0.7.1",
-    "mocha": "^2.5.3",
-    "serialport": "^2.1.2"
+    "mocha": "^2.5.3"
   }
 }
