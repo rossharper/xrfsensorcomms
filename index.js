@@ -4,7 +4,7 @@ var SerialPort = require('serialport').SerialPort;
 var MESSAGE_INTERVAL = 120;
 var serialPort = new SerialPort("/dev/ttyAMA0", {
     baudrate: 9600
-});
+}, false);
 
 var DEFAULT_SENSOR_DATA_PATH = "/var/lib/homecontrol/sensordata/temperatureSensors"
 
