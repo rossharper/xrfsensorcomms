@@ -1,11 +1,13 @@
-var SensorDataFile = require('./SensorDataFile');
+'use strict';
+
+const SensorDataFile = require('./SensorDataFile');
 
 function FileSystemBatteryDataRepository(sensorDataPath) {
-    this.storeBatteryValue = function (device, voltage) {
-        SensorDataFile.writeSensorDataFile(sensorDataPath, "batt", device, voltage);
-    }
+  this.storeBatteryValue = function (device, voltage) {
+    SensorDataFile.writeSensorDataFile(sensorDataPath, 'batt', device, voltage);
+  };
 }
 
 module.exports = {
-    BatteryDataRepository : FileSystemBatteryDataRepository
-}
+  BatteryDataRepository: FileSystemBatteryDataRepository
+};
