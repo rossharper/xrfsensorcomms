@@ -1,7 +1,9 @@
+'use strict';
+
 function getDeviceNameFromMessage(message) {
-    return message.substr(1, 2);
+  return message.substr(1, 2);
 }
 
 module.exports = {
-    getDeviceNameFromMessage : getDeviceNameFromMessage
-}
+  getDeviceNameFromMessage: getDeviceNameFromMessage
+};
