@@ -1,51 +1,53 @@
-var xrfParser = require('./xrfParser'),
-    AwakeMessageParser = require('./awakeMessageParser').AwakeMessageParser,
-    BatteryMessageParser = require('./batteryMessageParser').BatteryMessageParser,
-    BatteryLowMessageParser = require('./batteryLowMessageParser').BatteryLowMessageParser,
-    TemperatureMessageParser = require('./temperatureMessageParser').TemperatureMessageParser,
-    dataRepositoryFactory = require('./dataRepositoryFactory');
+'use strict';
+
+const xrfParser = require('./xrfParser');
+const AwakeMessageParser = require('./awakeMessageParser').AwakeMessageParser;
+const BatteryMessageParser = require('./batteryMessageParser').BatteryMessageParser;
+const BatteryLowMessageParser = require('./batteryLowMessageParser').BatteryLowMessageParser;
+const TemperatureMessageParser = require('./temperatureMessageParser').TemperatureMessageParser;
+const dataRepositoryFactory = require('./dataRepositoryFactory');
 
 function createMessageParsers(intervalUpdater, sensorDataPath) {
-    var tempDataRepository = dataRepositoryFactory.createTemperatureDataRepository(sensorDataPath);
-    var battDataRepository = dataRepositoryFactory.createBatteryDataRepository(sensorDataPath);
-    var battLowDataRepository = dataRepositoryFactory.createBatteryLowDataRepository(sensorDataPath);
+  const tempDataRepository = dataRepositoryFactory.createTemperatureDataRepository(sensorDataPath);
+  const battDataRepository = dataRepositoryFactory.createBatteryDataRepository(sensorDataPath);
+  const battLowDataRepository = dataRepositoryFactory.createBatteryLowDataRepository(sensorDataPath);
 
-    var awakeMessageParser = new AwakeMessageParser(
-        xrfParser,
-        function(device) {
-            intervalUpdater.sendIntervalUpdate(device);
+  const awakeMessageParser = new AwakeMessageParser(
+    xrfParser,
+    (device) => {
+      intervalUpdater.sendIntervalUpdate(device);
     });
 
-    var tempMessageParser = new TemperatureMessageParser(
-        xrfParser,
-        function(device, temperature) {
-            console.log("logging " + device + " temperature: " + temperature);
-            tempDataRepository.storeTemperatureValue(device, temperature);
+  const tempMessageParser = new TemperatureMessageParser(
+    xrfParser,
+    (device, temperature) => {
+      console.log(`logging ${device} temperature: ${temperature}`);
+      tempDataRepository.storeTemperatureValue(device, temperature);
     });
 
-    var battMessageParser = new BatteryMessageParser(
-        xrfParser,
-        function(device, voltage) {
-            console.log("logging " + device + " battery health: " + voltage);
-            battDataRepository.storeBatteryValue(device, voltage);
+  const battMessageParser = new BatteryMessageParser(
+    xrfParser,
+    (device, voltage) => {
+      console.log(`logging ${device} battery health: ${voltage}`);
+      battDataRepository.storeBatteryValue(device, voltage);
     });
 
-    var battLowMessageParser = new BatteryLowMessageParser(
-        xrfParser,
-        function(device) {
-            console.log("logging BATTERY LOW for device " + device);
-            battLowDataRepository.storeBatteryLowFlag(device);
-        }
-    );
+  const battLowMessageParser = new BatteryLowMessageParser(
+    xrfParser,
+    (device) => {
+      console.log(`logging BATTERY LOW for device ${device}`);
+      battLowDataRepository.storeBatteryLowFlag(device);
+    }
+  );
 
-    return [
-        awakeMessageParser,
-        tempMessageParser,
-        battMessageParser,
-        battLowMessageParser
-    ];
+  return [
+    awakeMessageParser,
+    tempMessageParser,
+    battMessageParser,
+    battLowMessageParser
+  ];
 }
 
 module.exports = {
-    createMessageParsers : createMessageParsers
-}
+  createMessageParsers: createMessageParsers
+};
