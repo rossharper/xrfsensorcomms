@@ -21,21 +21,21 @@ function createMessageParsers(intervalUpdater, sensorDataPath) {
   const tempMessageParser = new TemperatureMessageParser(
     xrfParser,
     (device, temperature) => {
-      console.log(`logging ${device} temperature: ${temperature}`);
+      console.log(`${new Date().toISOString()} logging ${device} temperature: ${temperature}`);
       tempDataRepository.storeTemperatureValue(device, temperature);
     });
 
   const battMessageParser = new BatteryMessageParser(
     xrfParser,
     (device, voltage) => {
-      console.log(`logging ${device} battery health: ${voltage}`);
+      console.log(`${new Date().toISOString()} logging ${device} battery health: ${voltage}`);
       battDataRepository.storeBatteryValue(device, voltage);
     });
 
   const battLowMessageParser = new BatteryLowMessageParser(
     xrfParser,
     (device) => {
-      console.log(`logging BATTERY LOW for device ${device}`);
+      console.log(`${new Date().toISOString()} logging BATTERY LOW for device ${device}`);
       battLowDataRepository.storeBatteryLowFlag(device);
     }
   );

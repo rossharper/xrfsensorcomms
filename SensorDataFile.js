@@ -7,7 +7,7 @@ function writeSensorDataFile(sensorDataPath, dataFile, device, value) {
   const devicePath = sensorDataPath + '/' + device;
   ensureDeviceDirectoryExists(devicePath, (err) => {
     if (err) {
-      console.log('Failed to create device directory: ' + devicePath + ' with err: ' + err);
+      console.log(`${new Date().toISOString()} Failed to create device directory: ${devicePath} with err: ${err}`);
     } else {
       writeDeviceDataValue(devicePath + '/' + dataFile, value);
     }
@@ -17,7 +17,7 @@ function writeSensorDataFile(sensorDataPath, dataFile, device, value) {
 function writeDeviceDataValue(filePath, value) {
   fs.writeFile(filePath, value, (err) => {
     if (err) {
-      return console.log(err);
+      return console.log(`${new Date().toISOString()} failed to write data value: ${err}`);
     }
   });
 }
