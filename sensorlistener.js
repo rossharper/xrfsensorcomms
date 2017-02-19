@@ -6,10 +6,10 @@ const messageParserFactory = require('./messageParserFactory');
 
 const messageLength = 12;
 
-function SensorListener(serialPort, messageInterval, sensorDataPath) {
+function SensorListener(serialPort, messageIntervalSeconds, sensorDataPath) {
   let buffer = '';
   const messageParsers = messageParserFactory.createMessageParsers(
-    new IntervalUpdater(new MessageSender(serialPort), messageInterval),
+    new IntervalUpdater(new MessageSender(serialPort), messageIntervalSeconds),
     sensorDataPath);
 
   function parseMessage(message) {

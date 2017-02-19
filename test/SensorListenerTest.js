@@ -16,12 +16,28 @@
 // pattern appears to be:
 // /a([A-Z]{2})([A-Z]{4})([A-Z0-9\.-]{5})/
 
-//const chai = require('chai');
-//const expect = chai.expect;
-//const spies = require('chai-spies');
+const chai = require('chai');
+const expect = chai.expect;
+const spies = require('chai-spies');
+
+const SensorListener = require('../sensorlistener').SensorListener;
+
+chai.use(spies);
 
 describe('XRF Sensor Listener', () => {
+
+  let serialPortStub = {
+    open: function () {}
+  }
+
   it('should open the serial port', () => {
 
+    let serialPortOpenSpy = chai.spy.on(serialPortStub, 'open');
+
+    const sensorListener = new SensorListener(serialPortStub, 120, '/var/lib/homecontrol/sensordata/temperatureSensors');
+
+    sensorListener.listen();
+
+    expect(serialPortOpenSpy).to.have.been.called();
   });
 });
