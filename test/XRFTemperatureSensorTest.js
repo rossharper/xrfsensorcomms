@@ -70,4 +70,14 @@ describe('temporary end-to-end refactoring tests', () => {
       expect(temperatureValue).to.equal('2.78');
     });
   });
+
+  it('should save value when message split across serial port callbacks', () => {
+    onDataCb('aBBTMPA2');
+    onDataCb('1.12');
+
+    setImmediate(() => {
+      const temperatureValue = readTemperatureValue('BB');
+      expect(temperatureValue).to.equal('21.12');
+    });
+  });
 });
