@@ -34,12 +34,12 @@ function SensorListener(serialPort, messageInterval, sensorDataPath) {
   this.listen = function () {
     serialPort.open((error) => {
       if (error) {
-        console.log('failed to open: ' + error);
+        console.log(`${new Date().toISOString()} failed to open: ${error}`);
       } else {
-        console.log('open');
+        console.log(`${new Date().toISOString()} open`);
         serialPort.on('data', (data) => {
 
-          console.log('data received: ' + data);
+          console.log(`${new Date().toISOString()} recv: ${data}`);
 
           buffer += data;
           //console.log('buffer after data receive: ' + buffer);
