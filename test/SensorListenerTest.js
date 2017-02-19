@@ -27,17 +27,25 @@ chai.use(spies);
 describe('XRF Sensor Listener', () => {
 
   let serialPortStub = {
-    open: function () {}
+    open: function () {},
+    drain: function (cb) {
+      cb();
+    },
+    close: function () {}
   }
 
   it('should open the serial port', () => {
-
     let serialPortOpenSpy = chai.spy.on(serialPortStub, 'open');
-
     const sensorListener = new SensorListener(serialPortStub, 120, '/var/lib/homecontrol/sensordata/temperatureSensors');
-
     sensorListener.listen();
-
     expect(serialPortOpenSpy).to.have.been.called();
+  });
+
+  it('should close the serial port', () => {
+    let serialPortCloseSpy = chai.spy.on(serialPortStub, 'close');
+    const sensorListener = new SensorListener(serialPortStub, 120, '/var/lib/homecontrol/sensordata/temperatureSensors');
+    sensorListener.listen();
+    sensorListener.stop();
+    expect(serialPortCloseSpy).to.have.been.called();
   });
 });

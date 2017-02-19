@@ -49,6 +49,16 @@ function SensorListener(serialPort, messageIntervalSeconds, sensorDataPath) {
       }
     });
   };
+
+  this.stop = function () {
+    console.log(`${new Date().toISOString()} Stopping...`);
+    serialPort.drain(() => {
+      console.log(`${new Date().toISOString()} Closing port...`);
+      serialPort.close(() => {
+        console.log(`${new Date().toISOString()} kthxbye`);
+      });
+    })
+  }
 }
 
 module.exports = {
