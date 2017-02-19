@@ -31,7 +31,15 @@ describe('temporary end-to-end refactoring tests', () => {
   let sensorListener;
 
   function readTemperatureValue(sensorId) {
-    return fs.readFileSync(path.join(SENSOR_PATH, sensorId, 'value'), {
+    return readSensorValue(sensorId, 'value');
+  }
+
+  function readBatteryValue(sensorId) {
+    return readSensorValue(sensorId, 'batt');
+  }
+
+  function readSensorValue(sensorId, value) {
+    return fs.readFileSync(path.join(SENSOR_PATH, sensorId, value), {
       encoding: 'utf8'
     });
   }
@@ -47,7 +55,19 @@ describe('temporary end-to-end refactoring tests', () => {
 
   it('should save a temperature when message received', () => {
     onDataCb('aAATMPA20.18');
-    const temperatureValue = readTemperatureValue('AA');
-    expect(temperatureValue).to.equal('20.18');
+
+    setImmediate(() => {
+      const temperatureValue = readTemperatureValue('AA');
+      expect(temperatureValue).to.equal('20.18');
+    });
+  });
+
+  it('should save a battery level when message received', () => {
+    onDataCb('aZZBATT2.78-');
+
+    setImmediate(() => {
+      const temperatureValue = readBatteryValue('ZZ');
+      expect(temperatureValue).to.equal('2.78');
+    });
   });
 });
