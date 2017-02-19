@@ -51,10 +51,10 @@ function start(args) {
     args.sensorDataPath
   );
 
-  sensorListener.listen();
-
   onDeath(() => {
     sensorListener.stop();
   });
+
+  sensorListener.listen();
 }
 start(parseArgs());
