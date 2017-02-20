@@ -13,8 +13,6 @@ function SensorListener(serialPort, messageIntervalSeconds, sensorDataPath) {
     sensorDataPath);
 
   function parseMessage(message) {
-    if (message[0] !== 'a') return;
-
     for (let i = 0; i < messageParsers.length; i++) {
       const parsed = messageParsers[i].parseMessage(message);
       if (parsed) break;
@@ -23,10 +21,19 @@ function SensorListener(serialPort, messageIntervalSeconds, sensorDataPath) {
 
   function processBuffer() {
     while (buffer.length >= messageLength) {
+      const messageStart = buffer.indexOf('a');
+      if (messageStart > 0) {
+        buffer = buffer.substring(messageStart);
+        continue;
+      } else if (messageStart < 0) {
+        buffer = '';
+        return;
+      }
+
       const message = buffer.substr(0, messageLength);
-      //console.log('PROCESS message: ' + message);
+      //console.log(`PROCESS message: ${message}`);
       buffer = buffer.substr(messageLength);
-      //console.log('POST-PROCESS buffer: ' + buffer);
+      //console.log(`POST-PROCESS buffer: ${buffer}`);
       parseMessage(message);
     }
   }

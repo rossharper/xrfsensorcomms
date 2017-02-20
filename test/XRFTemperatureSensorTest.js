@@ -6,6 +6,8 @@ const rimraf = require('rimraf');
 
 const chai = require('chai');
 const expect = chai.expect;
+const spies = require('chai-spies');
+chai.use(spies);
 
 describe('temporary end-to-end refactoring tests', () => {
 
@@ -25,16 +27,21 @@ describe('temporary end-to-end refactoring tests', () => {
 
   let serialPortStub = {
     open: function (cb) {
-      cb();
+      if (cb) cb();
     },
     drain: function (cb) {
-      cb();
+      if (cb) cb();
     },
-    close: function () {},
+    close: function (cb) {
+      if (cb) cb();
+    },
     on: function (event, cb) {
       if (event === 'data') {
         onDataCb = cb;
       }
+    },
+    write: function (message, cb) {
+      if (cb) cb();
     }
   };
   let sensorListener;
@@ -112,5 +119,69 @@ describe('temporary end-to-end refactoring tests', () => {
       expect(temperatureValue).to.equal('21.12');
       done();
     }, 500);
+  });
+
+  it('should save both values when two in a row', (done) => {
+    onDataCb('aXETMPA1');
+    onDataCb('8.73aXEB');
+    onDataCb('ATT3.01-');
+
+    setTimeout(() => {
+      const temperatureValue = readTemperatureValue('XE');
+      const batteryValue = readBatteryValue('XE');
+      expect(temperatureValue).to.equal('18.73');
+      expect(batteryValue).to.equal('3.01');
+      done();
+    }, 500)
+  });
+
+  it('should save value when junk preceeds message', (done) => {
+    onDataCb('JUNKaXFT');
+    onDataCb('MPA19.63');
+
+    setTimeout(() => {
+      const temperatureValue = readTemperatureValue('XF');
+      expect(temperatureValue).to.equal('19.63');
+      done();
+    }, 500);
+  });
+
+  it('should throw away junk messages that preceed message', (done) => {
+    onDataCb('JUNKJUNK');
+    onDataCb('JUNK');
+    onDataCb('aXGTMPA1');
+    onDataCb('8.11');
+
+    setTimeout(() => {
+      const temperatureValue = readTemperatureValue('XG');
+      expect(temperatureValue).to.equal('18.11');
+      done();
+    }, 500);
+  });
+
+  it('should send the new interval when AWAKE message received', (done) => {
+    let serialPortWriteSpy = chai.spy.on(serialPortStub, 'write');
+
+    onDataCb('aXHAWAKE');
+    onDataCb('----aXHB');
+    onDataCb('ATT2.99-');
+
+    expect(serialPortWriteSpy).to.have.been.called.with(`aXHINTVL120S`);
+    done();
+    ''
+  });
+
+  it('should send the new interval with padding when AWAKE message received', (done) => {
+    sensorListener = new SensorListener(serialPortStub, 5, SENSOR_PATH);
+    sensorListener.listen();
+    let serialPortWriteSpy = chai.spy.on(serialPortStub, 'write');
+
+    onDataCb('aXHAWAKE');
+    onDataCb('----aXHB');
+    onDataCb('ATT2.99-');
+
+    expect(serialPortWriteSpy).to.have.been.called.with(`aXHINTVL005S`);
+    done();
+    ''
   });
 });
