@@ -1,14 +1,15 @@
 'use strict';
 
-const SerialPort = require('serialport').SerialPort;
+const SerialPort = require('serialport');
 const SensorListener = require('./sensorlistener').SensorListener;
 const onDeath = require('death');
 
 const MESSAGE_INTERVAL = 120;
 const DEFAULT_SENSOR_DATA_PATH = '/var/lib/homecontrol/sensordata/temperatureSensors';
 const serialPort = new SerialPort('/dev/ttyAMA0', {
-  baudrate: 9600
-}, false);
+  baudrate: 9600,
+  autoOpen: false
+});
 
 function usage() {
   console.log('Usage: ');
