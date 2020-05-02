@@ -7,7 +7,7 @@ const onDeath = require('death');
 const MESSAGE_INTERVAL = 120;
 const DEFAULT_SENSOR_DATA_PATH = '/var/lib/homecontrol/sensordata/temperatureSensors';
 const serialPort = new SerialPort('/dev/ttyAMA0', {
-  baudrate: 9600,
+  baudRate: 9600,
   autoOpen: false
 });
 
