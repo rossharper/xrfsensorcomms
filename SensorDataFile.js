@@ -23,7 +23,7 @@ function writeDeviceDataValue(filePath, value) {
 }
 
 function ensureDeviceDirectoryExists(path, callback) {
-  fs.mkdir(path, (err) => {
+  fs.mkdir(path, { recursive: true }, (err) => {
     if (err) {
       if (err.code === 'EEXIST') callback(null); // ignore the error if the folder already exists
       else callback(err); // something else went wrong
