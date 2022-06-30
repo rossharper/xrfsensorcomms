@@ -9,7 +9,7 @@ const dataRepositoryFactory = require('./dataRepositoryFactory');
 
 function createMessageParsers(sensorDataPath) {
   const tempDataRepository = dataRepositoryFactory.createTemperatureDataRepository(sensorDataPath);
-  const humidtyDataRepository = dataRepositoryFactory.createHumidityDataRepository(sensorDataPath);
+  const humidityDataRepository = dataRepositoryFactory.createHumidityDataRepository(sensorDataPath);
   const battDataRepository = dataRepositoryFactory.createBatteryDataRepository(sensorDataPath);
   const battLowDataRepository = dataRepositoryFactory.createBatteryLowDataRepository(sensorDataPath);
 
