@@ -3,6 +3,7 @@
 const BatteryDataRepository = require('./FileSystemBatteryDataRepository').BatteryDataRepository;
 const BatteryLowDataRepository = require('./FileSystemBatteryLowDataRepository').BatteryLowDataRepository;
 const TemperatureDataRepository = require('./FileSystemTemperatureDataRepository').TemperatureDataRepository;
+const HumidityDataRepository = require('./FileSystemHumidityDataRepository').HumidityDataRepository;
 
 module.exports = {
   createBatteryDataRepository: function (sensorDataPath) {
@@ -10,6 +11,9 @@ module.exports = {
   },
   createTemperatureDataRepository: function (sensorDataPath) {
     return new TemperatureDataRepository(sensorDataPath);
+  },
+  createHumidityDataRepository: function (sensorDataPath) {
+    return new HumidityDataRepository(sensorDataPath);
   },
   createBatteryLowDataRepository: function (sensorDataPath) {
     return new BatteryLowDataRepository(sensorDataPath);

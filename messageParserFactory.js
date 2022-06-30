@@ -4,10 +4,12 @@ const xrfParser = require('./xrfParser');
 const BatteryMessageParser = require('./batteryMessageParser').BatteryMessageParser;
 const BatteryLowMessageParser = require('./batteryLowMessageParser').BatteryLowMessageParser;
 const TemperatureMessageParser = require('./temperatureMessageParser').TemperatureMessageParser;
+const HumidityMessageParser = require('./humidityMessageParser').HumidityMessageParser;
 const dataRepositoryFactory = require('./dataRepositoryFactory');
 
 function createMessageParsers(sensorDataPath) {
   const tempDataRepository = dataRepositoryFactory.createTemperatureDataRepository(sensorDataPath);
+  const humidtyDataRepository = dataRepositoryFactory.createHumidityDataRepository(sensorDataPath);
   const battDataRepository = dataRepositoryFactory.createBatteryDataRepository(sensorDataPath);
   const battLowDataRepository = dataRepositoryFactory.createBatteryLowDataRepository(sensorDataPath);
 
@@ -16,6 +18,13 @@ function createMessageParsers(sensorDataPath) {
     (device, temperature) => {
       console.log(`${new Date().toISOString()} logging ${device} temperature: ${temperature}`);
       tempDataRepository.storeTemperatureValue(device, temperature);
+    });
+
+  const humidtyMessageParser = new HumidityMessageParser(
+    xrfParser,
+    (device, humidity) => {
+      console.log(`${new Date().toISOString()} logging ${device} humidity: ${humidity}`);
+      humidityDataRepository.storeHumidtyValue(device, humidity);
     });
 
   const battMessageParser = new BatteryMessageParser(
@@ -35,6 +44,7 @@ function createMessageParsers(sensorDataPath) {
 
   return [
     tempMessageParser,
+    humidityMessageParser,
     battMessageParser,
     battLowMessageParser
   ];
