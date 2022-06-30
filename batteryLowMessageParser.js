@@ -2,7 +2,7 @@
 
 function BatteryLowMessageParser(xrfParser, onBattLowCallback) {
   this.parseMessage = function (message) {
-    const payload = message.match(/a[A-Z][A-Z]BATTLOW--/);
+    const payload = message.match(/a[A-Z0-9][A-Z0-9]BATTLOW--/);
     if (payload) {
       onBattLowCallback(xrfParser.getDeviceNameFromMessage(message));
       return true;
