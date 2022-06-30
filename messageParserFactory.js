@@ -20,7 +20,7 @@ function createMessageParsers(sensorDataPath) {
       tempDataRepository.storeTemperatureValue(device, temperature);
     });
 
-  const humidtyMessageParser = new HumidityMessageParser(
+  const humidityMessageParser = new HumidityMessageParser(
     xrfParser,
     (device, humidity) => {
       console.log(`${new Date().toISOString()} logging ${device} humidity: ${humidity}`);

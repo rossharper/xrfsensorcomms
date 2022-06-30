@@ -9,5 +9,5 @@ function FileSystemHumidityDataRepository(sensorDataPath) {
 }
 
 module.exports = {
-  HumidityyDataRepository: FileSystemHumidityDataRepository
+  HumidityDataRepository: FileSystemHumidityDataRepository
 };
