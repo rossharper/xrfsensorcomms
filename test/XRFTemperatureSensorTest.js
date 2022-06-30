@@ -159,29 +159,4 @@ describe('temporary end-to-end refactoring tests', () => {
     }, 500);
   });
 
-  it('should send the new interval when AWAKE message received', (done) => {
-    let serialPortWriteSpy = chai.spy.on(serialPortStub, 'write');
-
-    onDataCb('aXHAWAKE');
-    onDataCb('----aXHB');
-    onDataCb('ATT2.99-');
-
-    expect(serialPortWriteSpy).to.have.been.called.with(`aXHINTVL120S`);
-    done();
-    ''
-  });
-
-  it('should send the new interval with padding when AWAKE message received', (done) => {
-    sensorListener = new SensorListener(serialPortStub, 5, SENSOR_PATH);
-    sensorListener.listen();
-    let serialPortWriteSpy = chai.spy.on(serialPortStub, 'write');
-
-    onDataCb('aXHAWAKE');
-    onDataCb('----aXHB');
-    onDataCb('ATT2.99-');
-
-    expect(serialPortWriteSpy).to.have.been.called.with(`aXHINTVL005S`);
-    done();
-    ''
-  });
-});
+);

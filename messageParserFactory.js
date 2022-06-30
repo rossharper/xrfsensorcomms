@@ -1,22 +1,15 @@
 'use strict';
 
 const xrfParser = require('./xrfParser');
-const AwakeMessageParser = require('./awakeMessageParser').AwakeMessageParser;
 const BatteryMessageParser = require('./batteryMessageParser').BatteryMessageParser;
 const BatteryLowMessageParser = require('./batteryLowMessageParser').BatteryLowMessageParser;
 const TemperatureMessageParser = require('./temperatureMessageParser').TemperatureMessageParser;
 const dataRepositoryFactory = require('./dataRepositoryFactory');
 
-function createMessageParsers(intervalUpdater, sensorDataPath) {
+function createMessageParsers(sensorDataPath) {
   const tempDataRepository = dataRepositoryFactory.createTemperatureDataRepository(sensorDataPath);
   const battDataRepository = dataRepositoryFactory.createBatteryDataRepository(sensorDataPath);
   const battLowDataRepository = dataRepositoryFactory.createBatteryLowDataRepository(sensorDataPath);
-
-  const awakeMessageParser = new AwakeMessageParser(
-    xrfParser,
-    (device) => {
-      intervalUpdater.sendIntervalUpdate(device);
-    });
 
   const tempMessageParser = new TemperatureMessageParser(
     xrfParser,
@@ -41,7 +34,6 @@ function createMessageParsers(intervalUpdater, sensorDataPath) {
   );
 
   return [
-    awakeMessageParser,
     tempMessageParser,
     battMessageParser,
     battLowMessageParser
