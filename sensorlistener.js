@@ -1,16 +1,13 @@
 'use strict';
 
 const MessageSender = require('./messageSender').MessageSender;
-const IntervalUpdater = require('./intervalUpdater').IntervalUpdater;
 const messageParserFactory = require('./messageParserFactory');
 
 const messageLength = 12;
 
 function SensorListener(serialPort, messageIntervalSeconds, sensorDataPath) {
   let buffer = '';
-  const messageParsers = messageParserFactory.createMessageParsers(
-    new IntervalUpdater(new MessageSender(serialPort), messageIntervalSeconds),
-    sensorDataPath);
+  const messageParsers = messageParserFactory.createMessageParsers(sensorDataPath);
 
   function parseMessage(message) {
     for (let i = 0; i < messageParsers.length; i++) {
