@@ -24,7 +24,7 @@ function createMessageParsers(sensorDataPath) {
     xrfParser,
     (device, humidity) => {
       console.log(`${new Date().toISOString()} logging ${device} humidity: ${humidity}`);
-      humidityDataRepository.storeHumidtyValue(device, humidity);
+      humidityDataRepository.storeHumidityValue(device, humidity);
     });
 
   const battMessageParser = new BatteryMessageParser(
